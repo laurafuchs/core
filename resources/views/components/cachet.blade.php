@@ -26,6 +26,19 @@
         <meta property="twitter:title" content="{{ $title ?: config('cachet.title', 'Cachet') }}" />
         <meta property="twitter:description" content="{{ $description }}" />
 
+        <script>
+            (() => {
+                const theme = localStorage.getItem('theme') ?? 'system'
+                const isDarkMode =
+                    theme === 'dark' ||
+                    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+                document.documentElement.classList.toggle('dark', isDarkMode)
+                document.documentElement.classList.toggle('light', theme === 'light')
+                window.theme = theme
+            })()
+        </script>
+
         @vite(['resources/css/cachet.css', 'resources/js/cachet.js'], 'vendor/cachethq/cachet/build')
         @filamentStyles
 

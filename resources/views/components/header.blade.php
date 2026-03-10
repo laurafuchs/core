@@ -11,8 +11,44 @@
         </a>
     </div>
 
-    @if ($dashboardLoginLink)
     <div class="flex items-center gap-2.5 sm:gap-5">
+        <div
+            x-data="{
+                resolvedTheme: 'light',
+                sync() {
+                    this.resolvedTheme = window.CachetTheme.resolved()
+                },
+                toggle() {
+                    window.CachetTheme.set(this.resolvedTheme === 'dark' ? 'light' : 'dark')
+                },
+            }"
+            x-init="
+                sync()
+                window.addEventListener('cachet-theme-changed', () => sync())
+            "
+        >
+            <button
+                id="cachet-theme-toggle"
+                type="button"
+                x-on:click="toggle()"
+                aria-label="{{ __('cachet::cachet.theme_toggle.dark_mode') }}"
+                x-bind:aria-label="resolvedTheme === 'dark' ? @js(__('cachet::cachet.theme_toggle.light_mode')) : @js(__('cachet::cachet.theme_toggle.dark_mode'))"
+                class="inline-flex items-center gap-2 rounded-sm border border-zinc-300 px-3 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-white/5"
+            >
+                <x-heroicon-o-moon
+                    x-cloak
+                    x-show="resolvedTheme !== 'dark'"
+                    class="size-4"
+                />
+                <x-heroicon-o-sun
+                    x-cloak
+                    x-show="resolvedTheme === 'dark'"
+                    class="size-4"
+                />
+                <span x-text="resolvedTheme === 'dark' ? @js(__('cachet::cachet.theme_toggle.light_mode')) : @js(__('cachet::cachet.theme_toggle.dark_mode'))">{{ __('cachet::cachet.theme_toggle.dark_mode') }}</span>
+            </button>
+        </div>
+        @if ($dashboardLoginLink)
         <a href="{{ Cachet\Cachet::dashboardPath() }}" class="rounded-sm bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground">
             {{ __('filament-panels::pages/dashboard.title') }}
         </a>
@@ -25,7 +61,7 @@
             </button>
         </form>
         @endauth
+        @endif
     </div>
-    @endif
 </div>
 {{ \Cachet\Facades\CachetView::renderHook(\Cachet\View\RenderHook::STATUS_PAGE_NAVIGATION_AFTER) }}

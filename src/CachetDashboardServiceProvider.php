@@ -88,6 +88,7 @@ class CachetDashboardServiceProvider extends PanelProvider
                     ->icon('heroicon-o-heart'),
             ])
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER, fn () => view('cachet::filament.widgets.add-incident-button'))
+            ->renderHook(PanelsRenderHook::TOPBAR_END, fn () => view('cachet::filament.widgets.theme-switcher'))
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

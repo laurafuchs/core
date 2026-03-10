@@ -349,8 +349,15 @@ final class ThemeData extends BaseData
                 --accent-background: {$pairingColor[50]};
             }
 
+            html.dark {
+                --accent: {$theme['dark']['accent']};
+                --accent-content: {$theme['dark']['accent-content']};
+                --accent-foreground: {$theme['dark']['accent-foreground']};
+                --accent-background: {$pairingColor[900]};
+            }
+
             @media(prefers-color-scheme: dark) {
-                :root {
+                html:not(.light):not(.dark) {
                     --accent: {$theme['dark']['accent']};
                     --accent-content: {$theme['dark']['accent-content']};
                     --accent-foreground: {$theme['dark']['accent-foreground']};

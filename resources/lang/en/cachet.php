@@ -16,4 +16,8 @@ return [
     'open_source_status_page' => 'The open-source status page.',
     'all_times_shown_in' => 'All times are shown in *:timezone*.',
     'rss_feed' => ':name RSS Feed',
+    'theme_toggle' => [
+        'dark_mode' => 'Dark mode',
+        'light_mode' => 'Light mode',
+    ],
 ];

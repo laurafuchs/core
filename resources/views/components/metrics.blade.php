@@ -19,7 +19,7 @@
     }
 
     function getFontColor() {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches === true) {
+        if (document.documentElement.classList.contains('dark')) {
             return `rgba(${getCssVar('--gray-100')}, 1)`
         }
 
@@ -102,7 +102,7 @@
             return 'day'
         }
 
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        window.addEventListener('cachet-theme-changed', () => {
             themeColors = getThemeColors()
 
             chart.data.datasets[0].backgroundColor = themeColors.backgroundColors
