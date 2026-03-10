@@ -18,18 +18,41 @@
         return getComputedStyle(document.documentElement).getPropertyValue(name).trim()
     }
 
-    function getFontColor() {
-        if (document.documentElement.classList.contains('dark')) {
-            return `rgba(${getCssVar('--gray-100')}, 1)`
+    function resolveColor(value, alpha = null) {
+        const element = document.createElement('div')
+        element.style.color = value
+        document.body.appendChild(element)
+
+        const resolvedColor = getComputedStyle(element).color
+        element.remove()
+
+        if (alpha === null || ! resolvedColor.startsWith('rgb')) {
+            return resolvedColor
         }
 
-        return `rgba(${getCssVar('--gray-800')}, 1)`
+        const channels = resolvedColor.match(/\d+(\.\d+)?/g)
+
+        if (channels === null) {
+            return resolvedColor
+        }
+
+        const [red, green, blue] = channels
+
+        return `rgba(${red}, ${green}, ${blue}, ${alpha})`
+    }
+
+    function getFontColor() {
+        if (document.documentElement.classList.contains('dark')) {
+            return resolveColor(getCssVar('--color-gray-100'))
+        }
+
+        return resolveColor(getCssVar('--color-zinc-800'))
     }
 
     function getThemeColors() {
         const fontColor = getFontColor()
-        const accent = `rgba(${getCssVar('--accent')}, 1)`
-        const accentBackground = `rgba(${getCssVar('--accent-background')}, 0.2)`
+        const accent = resolveColor(getCssVar('--accent'))
+        const accentBackground = resolveColor(getCssVar('--accent-background'), 0.2)
 
         return {
             fontColor: fontColor,

@@ -8,7 +8,6 @@ import Collapse from '@alpinejs/collapse'
 import Focus from '@alpinejs/focus'
 import Ui from '@alpinejs/ui'
 
-Chart.defaults.color = '#fff'
 window.Chart = Chart
 
 const colorScheme = window.matchMedia('(prefers-color-scheme: dark)')
