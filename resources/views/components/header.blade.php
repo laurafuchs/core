@@ -16,10 +16,21 @@
             x-data="{
                 resolvedTheme: 'light',
                 sync() {
-                    this.resolvedTheme = window.CachetTheme.resolved()
+                    this.resolvedTheme = window.CachetTheme?.resolved?.()
+                        ?? (document.documentElement.classList.contains('dark') ? 'dark' : 'light')
                 },
                 toggle() {
-                    window.CachetTheme.set(this.resolvedTheme === 'dark' ? 'light' : 'dark')
+                    const nextTheme = this.resolvedTheme === 'dark' ? 'light' : 'dark'
+
+                    if (window.CachetTheme?.set) {
+                        window.CachetTheme.set(nextTheme)
+
+                        return
+                    }
+
+                    document.documentElement.classList.toggle('dark', nextTheme === 'dark')
+                    document.documentElement.classList.toggle('light', nextTheme === 'light')
+                    this.resolvedTheme = nextTheme
                 },
             }"
             x-init="

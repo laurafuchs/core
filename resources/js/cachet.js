@@ -12,38 +12,40 @@ window.Chart = Chart
 
 const colorScheme = window.matchMedia('(prefers-color-scheme: dark)')
 
-const cachetTheme = {
-    preference() {
-        return localStorage.getItem('theme') ?? 'system'
-    },
-    resolved(theme = this.preference()) {
-        if (theme === 'system') {
-            return colorScheme.matches ? 'dark' : 'light'
-        }
+const cachetTheme =
+    window.CachetTheme ??
+    {
+        preference() {
+            return localStorage.getItem('theme') ?? 'system'
+        },
+        resolved(theme = this.preference()) {
+            if (theme === 'system') {
+                return colorScheme.matches ? 'dark' : 'light'
+            }
 
-        return theme
-    },
-    apply(theme = this.preference()) {
-        const resolvedTheme = this.resolved(theme)
+            return theme
+        },
+        apply(theme = this.preference()) {
+            const resolvedTheme = this.resolved(theme)
 
-        document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
-        document.documentElement.classList.toggle('light', theme === 'light')
-        window.theme = theme
+            document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
+            document.documentElement.classList.toggle('light', theme === 'light')
+            window.theme = theme
 
-        window.dispatchEvent(
-            new CustomEvent('cachet-theme-changed', {
-                detail: {
-                    preference: theme,
-                    theme: resolvedTheme,
-                },
-            }),
-        )
-    },
-    set(theme) {
-        localStorage.setItem('theme', theme)
-        this.apply(theme)
-    },
-}
+            window.dispatchEvent(
+                new CustomEvent('cachet-theme-changed', {
+                    detail: {
+                        preference: theme,
+                        theme: resolvedTheme,
+                    },
+                }),
+            )
+        },
+        set(theme) {
+            localStorage.setItem('theme', theme)
+            this.apply(theme)
+        },
+    }
 
 window.CachetTheme = cachetTheme
 

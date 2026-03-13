@@ -28,14 +28,42 @@
 
         <script>
             (() => {
-                const theme = localStorage.getItem('theme') ?? 'system'
-                const isDarkMode =
-                    theme === 'dark' ||
-                    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                const colorScheme = window.matchMedia('(prefers-color-scheme: dark)')
+                const cachetTheme = window.CachetTheme ?? {
+                    preference() {
+                        return localStorage.getItem('theme') ?? 'system'
+                    },
+                    resolved(theme = this.preference()) {
+                        if (theme === 'system') {
+                            return colorScheme.matches ? 'dark' : 'light'
+                        }
 
-                document.documentElement.classList.toggle('dark', isDarkMode)
-                document.documentElement.classList.toggle('light', theme === 'light')
-                window.theme = theme
+                        return theme
+                    },
+                    apply(theme = this.preference()) {
+                        const resolvedTheme = this.resolved(theme)
+
+                        document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
+                        document.documentElement.classList.toggle('light', theme === 'light')
+                        window.theme = theme
+
+                        window.dispatchEvent(
+                            new CustomEvent('cachet-theme-changed', {
+                                detail: {
+                                    preference: theme,
+                                    theme: resolvedTheme,
+                                },
+                            }),
+                        )
+                    },
+                    set(theme) {
+                        localStorage.setItem('theme', theme)
+                        this.apply(theme)
+                    },
+                }
+
+                window.CachetTheme = cachetTheme
+                cachetTheme.apply()
             })()
         </script>
 
